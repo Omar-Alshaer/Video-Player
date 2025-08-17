@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -75,26 +74,27 @@
             const container = document.getElementById('video-container');
             const is90or270 = currentRotation === 90 || currentRotation === 270;
 
+            // Reset iframe styles to avoid compounding transforms
+            iframe.style.transform = '';
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.left = '0';
+            iframe.style.top = '0';
+
             // Adjust container aspect ratio based on rotation
             container.style.aspectRatio = is90or270 ? '9 / 16' : '16 / 9';
             
             // Apply rotation to iframe only
-            iframe.style.transform = `rotate(${currentRotation}deg)`;
-            
-            // Adjust iframe size to fit container while maintaining aspect ratio
             if (is90or270) {
                 iframe.style.width = '177.78%'; // 16/9 * 100% to fill height
                 iframe.style.height = '100%';
                 iframe.style.left = '50%';
                 iframe.style.top = '50%';
-                iframe.style.transform += ' translate(-50%, -50%)';
+                iframe.style.transform = `translate(-50%, -50%) rotate(${currentRotation}deg)`;
             } else {
-                iframe.style.width = '100%';
-                iframe.style.height = '100%';
-                iframe.style.left = '0';
-                iframe.style.top = '0';
                 iframe.style.transform = `rotate(${currentRotation}deg)`;
             }
         }
     </script>
 </body>
+</html>
