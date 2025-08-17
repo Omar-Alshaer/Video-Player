@@ -95,7 +95,7 @@ button:active {
 #video-container {
     margin-top: 32px;
     border-radius: 12px;
-    overflow: hidden;
+    overflow: visible; /* Changed to visible to prevent clipping */
     position: relative;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     width: 100%;

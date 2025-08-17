@@ -30,6 +30,12 @@
                 </svg>
                 Rotate Left
             </button>
+            <button onclick="toggleFullscreen()" title="Toggle Fullscreen">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+                </svg>
+                Fullscreen
+            </button>
         </div>
         <div id="error-message" class="error"></div>
         <footer>&copy; 2025 Video Player. All rights reserved (Omar Elshaer).</footer>
@@ -81,18 +87,30 @@
             iframe.style.left = '0';
             iframe.style.top = '0';
 
-            // Adjust container aspect ratio based on rotation
+            // Adjust container aspect ratio and padding
             container.style.aspectRatio = is90or270 ? '9 / 16' : '16 / 9';
-            
+            container.style.padding = is90or270 ? '10px' : '0';
+
             // Apply rotation to iframe only
             if (is90or270) {
-                iframe.style.width = '177.78%'; // 16/9 * 100% to fill height
+                iframe.style.width = '180%'; // Slightly increased to ensure visibility
                 iframe.style.height = '100%';
                 iframe.style.left = '50%';
                 iframe.style.top = '50%';
                 iframe.style.transform = `translate(-50%, -50%) rotate(${currentRotation}deg)`;
             } else {
                 iframe.style.transform = `rotate(${currentRotation}deg)`;
+            }
+        }
+
+        function toggleFullscreen() {
+            const container = document.getElementById('video-container');
+            if (!document.fullscreenElement) {
+                container.requestFullscreen().catch(err => {
+                    console.error(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
             }
         }
     </script>
