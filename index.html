@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Video Player</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Video Player</h1>
+        <p>Paste your video share link below to play it. Use the rotation buttons to adjust the video orientation.</p>
+        <input type="text" id="video-url" placeholder="Paste video link here...">
+        <button onclick="loadVideo()">Load Video</button>
+        <div id="video-container">
+            <iframe id="video-iframe"></iframe>
+        </div>
+        <div class="controls">
+            <button onclick="rotateVideoClockwise()" title="Rotate Right">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M23 4v6h-6"></path>
+                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                </svg>
+                Rotate Right
+            </button>
+            <button onclick="rotateVideoCounterClockwise()" title="Rotate Left">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 4v6h6"></path>
+                    <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                </svg>
+                Rotate Left
+            </button>
+        </div>
+        <div id="error-message" class="error"></div>
+        <footer>&copy; 2025 Video Player. All rights reserved.</footer>
+    </div>
+
+    <script>
+        let currentRotation = 0;
+
+        function loadVideo() {
+            const urlInput = document.getElementById('video-url').value;
+            const errorMessage = document.getElementById('error-message');
+            const iframe = document.getElementById('video-iframe');
+            const container = document.getElementById('video-container');
+            errorMessage.textContent = '';
+
+            // Extract file ID from video URL (assuming Google Drive format)
+            const match = urlInput.match(/\/d\/([a-zA-Z0-9_-]+)/);
+            if (!match) {
+                errorMessage.textContent = 'Invalid video link. Please ensure it\'s a valid share link.';
+                return;
+            }
+
+            const fileId = match[1];
+            const embedUrl = `https://drive.google.com/file/d/${fileId}/preview`;
+            iframe.src = embedUrl;
+            currentRotation = 0;
+            updateVideoTransform();
+        }
+
+        function rotateVideoClockwise() {
+            currentRotation = (currentRotation + 90) % 360;
+            updateVideoTransform();
+        }
+
+        function rotateVideoCounterClockwise() {
+            currentRotation = (currentRotation - 90 + 360) % 360;
+            updateVideoTransform();
+        }
+
+        function updateVideoTransform() {
+            const iframe = document.getElementById('video-iframe');
+            const container = document.getElementById('video-container');
+            const is90or270 = currentRotation === 90 || currentRotation === 270;
+
+            // Adjust container aspect ratio based on rotation
+            container.style.aspectRatio = is90or270 ? '9 / 16' : '16 / 9';
+            
+            // Apply rotation to iframe only
+            iframe.style.transform = `rotate(${currentRotation}deg)`;
+            
+            // Adjust iframe size to fit container while maintaining aspect ratio
+            if (is90or270) {
+                iframe.style.width = '177.78%'; // 16/9 * 100% to fill height
+                iframe.style.height = '100%';
+                iframe.style.left = '50%';
+                iframe.style.top = '50%';
+                iframe.style.transform += ' translate(-50%, -50%)';
+            } else {
+                iframe.style.width = '100%';
+                iframe.style.height = '100%';
+                iframe.style.left = '0';
+                iframe.style.top = '0';
+                iframe.style.transform = `rotate(${currentRotation}deg)`;
+            }
+        }
+    </script>
+</body>
+</html>
